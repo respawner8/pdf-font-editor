@@ -1,4 +1,16 @@
 body { margin: 0; font-family: system-ui, sans-serif; background: #222; color: #ddd; }
 #status-bar { padding: 8px 12px; background: #111; }
 #toolbar { padding: 8px 12px; background: #1a1a1a; }
-#pages { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+#pages { padding: 16px; display: flex; flex-direction: column; gap: 16px; align-items: center; }
+
+.page-wrap { background: #fff; box-shadow: 0 0 0 1px #333; }
+.text-item { user-select: text; }
+.text-item:focus { color: #111 !important; background: rgba(255,235,59,0.18); }
+.text-item.edited { color: #111 !important; background: rgba(255,235,59,0.10); }
+.text-item.overflow { outline: 1px solid #e53; }
+
+#toolbar button {
+  background: #2a2a2a; color: #eee; border: 1px solid #3a3a3a;
+  padding: 6px 12px; margin-right: 6px; cursor: pointer; border-radius: 4px;
+}
+#toolbar button:hover { background: #333; }
