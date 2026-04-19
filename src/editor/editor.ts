@@ -12,6 +12,16 @@ import { downloadPdf, suggestedFilename } from './download';
 import { loadFontBytes } from './font-bytes';
 import type { SubstituteFont, TextItem } from '@/shared/types';
 
+const SIZE_WARN_MB = 100;
+
+function showBanner(text: string, color = '#7a5a00') {
+  const banner = document.createElement('div');
+  banner.textContent = text;
+  Object.assign(banner.style, { background: color, color: '#fff', padding: '6px 12px' });
+  const toolbar = document.getElementById('toolbar');
+  toolbar?.parentNode?.insertBefore(banner, toolbar);
+}
+
 async function boot() {
   const params = new URLSearchParams(location.search);
   const src = params.get('src');
@@ -23,15 +33,47 @@ async function boot() {
   status.textContent = `Loading ${src}…`;
 
   const bytes = await loadPdfBytes(src);
+
+  if (bytes.byteLength > SIZE_WARN_MB * 1024 * 1024) {
+    const mb = (bytes.byteLength / (1024 * 1024)).toFixed(0);
+    if (!confirm(`This PDF is ${mb} MB. Loading large PDFs can be slow or may exhaust memory. Continue?`)) {
+      status.textContent = 'Cancelled.';
+      return;
+    }
+  }
+
   const hash = await sha256Hex(bytes);
-  const loaded = await loadPdf(bytes);
+
+  let loaded;
+  try {
+    loaded = await loadPdf(bytes);
+  } catch (err: any) {
+    if (err?.name === 'PasswordException') {
+      const pwd = prompt('This PDF is password-protected. Enter password:');
+      if (!pwd) { status.textContent = 'Password required.'; return; }
+      try {
+        loaded = await loadPdf(bytes, pwd);
+      } catch {
+        status.textContent = 'Wrong password. Reload to try again.';
+        return;
+      }
+    } else {
+      throw err;
+    }
+  }
+
   const fontMap = await extractFontDescriptors(loaded.doc);
 
   const substitutes = new Map<string, SubstituteFont>();
+  let hadSystemFallback = false;
   for (const [ref, desc] of fontMap) {
     const sub = await resolveFont(desc);
+    if (sub.source === 'system') hadSystemFallback = true;
     substitutes.set(ref, sub);
     if (sub.source === 'core') await ensureCoreLoaded(sub.family);
+  }
+  if (hadSystemFallback) {
+    showBanner('⚠️ Some fonts approximated — network may be offline.');
   }
 
   const model = new EditModel();
@@ -50,6 +92,12 @@ async function boot() {
     });
     pagesRoot.appendChild(pw.wrap);
     pageWraps.push(pw);
+  }
+
+  const totalItems = pageWraps.reduce((n, pw) => n + pw.page.textItems.length, 0);
+  if (totalItems === 0) {
+    status.innerHTML = '<strong>This PDF has no editable text</strong> — it may be a scanned image. Editing is not supported for image-only PDFs.';
+    return;
   }
 
   status.textContent = `${src} — ${loaded.numPages} page(s) — hash ${hash.slice(0, 12)}…`;
