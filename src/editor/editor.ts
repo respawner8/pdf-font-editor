@@ -7,7 +7,10 @@ import { sha256Hex } from '@/shared/hash';
 import { buildOverlay, enableAddTextMode, type PageWrap } from './overlay';
 import { EditModel } from './edit-model';
 import { buildToolbar } from './ui/toolbar';
-import type { SubstituteFont } from '@/shared/types';
+import { writePdf } from './writer';
+import { downloadPdf, suggestedFilename } from './download';
+import { loadFontBytes } from './font-bytes';
+import type { SubstituteFont, TextItem } from '@/shared/types';
 
 async function boot() {
   const params = new URLSearchParams(location.search);
@@ -80,7 +83,19 @@ async function boot() {
         first.overlay.appendChild(el);
       });
     },
-    onSave: () => alert('Save: coming in Phase 6')
+    onSave: async () => {
+      status.textContent = 'Saving…';
+      try {
+        const textItemIndex = new Map<string, TextItem>();
+        for (const pw of pageWraps) for (const t of pw.page.textItems) textItemIndex.set(t.id, t);
+        const out = await writePdf(bytes, model.ops(), substitutes, textItemIndex, { loadFontBytes });
+        await downloadPdf(out, suggestedFilename(src));
+        status.textContent = 'Saved.';
+      } catch (err) {
+        status.textContent = `Save failed: ${(err as Error).message}`;
+        console.error(err);
+      }
+    }
   });
 
   (window as any).__editModel = model;
