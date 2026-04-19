@@ -1,0 +1,4 @@
+body { margin: 0; font-family: system-ui, sans-serif; background: #222; color: #ddd; }
+#status-bar { padding: 8px 12px; background: #111; }
+#toolbar { padding: 8px 12px; background: #1a1a1a; }
+#pages { padding: 16px; display: flex; flex-direction: column; gap: 16px; }

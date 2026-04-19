@@ -6,7 +6,13 @@ import path from 'node:path';
 export default defineConfig({
   plugins: [crx({ manifest })],
   resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
-  build: { target: 'esnext', sourcemap: true },
+  build: {
+    target: 'esnext',
+    sourcemap: true,
+    rollupOptions: {
+      input: { editor: path.resolve(__dirname, 'src/editor/editor.html') }
+    }
+  },
   test: {
     environment: 'happy-dom',
     globals: true,

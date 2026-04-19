@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "PDF Font Editor",
+  "version": "0.1.0",
+  "description": "Edit local PDFs while preserving original fonts via metric-matched substitutes",
+  "action": { "default_title": "Edit this PDF" },
+  "background": {
+    "service_worker": "src/background/service-worker.ts",
+    "type": "module"
+  },
+  "permissions": ["activeTab", "storage", "downloads"],
+  "host_permissions": ["file:///*"],
+  "web_accessible_resources": [
+    {
+      "resources": ["src/editor/editor.html", "src/fonts/assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
