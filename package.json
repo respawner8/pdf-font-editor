@@ -1,0 +1,41 @@
+{
+  "name": "pdf-font-editor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "dev": "vite",
+    "build": "vite build",
+    "test:watch": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@fontsource/arimo": "^5.2.8",
+    "@fontsource/caladea": "^5.2.8",
+    "@fontsource/carlito": "^5.2.8",
+    "@fontsource/cousine": "^5.2.7",
+    "@fontsource/noto-sans": "^5.2.10",
+    "@fontsource/source-sans-3": "^5.2.9",
+    "@fontsource/source-serif-4": "^5.2.9",
+    "@fontsource/tinos": "^5.2.7",
+    "@pdf-lib/fontkit": "^1.1.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.6.205"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.4.0",
+    "@types/chrome": "^0.1.40",
+    "@vitest/ui": "^4.1.4",
+    "happy-dom": "^20.9.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.8",
+    "vitest": "^4.1.4"
+  }
+}

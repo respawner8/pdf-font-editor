@@ -82,9 +82,8 @@ pdf-font-editor/
 | `typescript` | Language |
 | `vitest` + `@vitest/ui` | Unit tests |
 | `happy-dom` | Vitest DOM env |
-| `@fontsource/liberation-sans` / `liberation-serif` / `liberation-mono` | Bundled core |
-| `@fontsource/carlito` | Bundled core |
-| `@fontsource/cousine` | Bundled core |
+| `@fontsource/arimo` / `tinos` / `cousine` | Bundled core (metric-matches for Arial / Times / Courier) |
+| `@fontsource/carlito` / `caladea` | Bundled core (metric-matches for Calibri / Cambria) |
 | `@fontsource/source-sans-3` / `source-serif-4` | Bundled core |
 | `@fontsource/noto-sans` | Bundled core |
 
@@ -112,7 +111,7 @@ npm pkg set scripts.test:watch="vitest"
 
 ```bash
 npm install pdfjs-dist pdf-lib @pdf-lib/fontkit
-npm install @fontsource/liberation-sans @fontsource/liberation-serif @fontsource/liberation-mono @fontsource/carlito @fontsource/cousine @fontsource/source-sans-3 @fontsource/source-serif-4 @fontsource/noto-sans
+npm install @fontsource/arimo @fontsource/tinos @fontsource/cousine @fontsource/carlito @fontsource/caladea @fontsource/source-sans-3 @fontsource/source-serif-4 @fontsource/noto-sans
 ```
 
 - [ ] **Step 3:** Install dev deps:
